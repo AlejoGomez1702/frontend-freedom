@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Corral } from './interfaces/interfaces';
+import { CorralsService } from './services/corrals.service';
 
 export interface PeriodicElement {
   position: number;
@@ -19,9 +21,42 @@ const ELEMENT_DATA: PeriodicElement[] = [
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent 
+export class AppComponent implements OnInit
 {
   title = 'freedom-frontend';
-  displayedColumns: string[] = ['position', 'name', 'age', 'dangerousness'];
-  dataSource = ELEMENT_DATA;
+  // public displayedColumnsCorrals: string[] = [ 'name', 'age', 'dangerousness'];
+  // dataSource = ELEMENT_DATA;
+
+  // Data
+  public selectedCorral: string = '';
+  public dataSourceCorrals: Corral[] = [];
+  public displayedColumnsCorrals: string[] = [ 'name', 'age', 'dangerousness'];
+
+  constructor(
+    private corralsService: CorralsService
+  )
+  {
+
+  }
+
+  ngOnInit(): void 
+  {
+    this.loadData();
+  }
+
+  loadData()
+  {
+    this.corralsService.getAllCorrals().subscribe(
+      res => {
+        // console.log( res );
+        this.dataSourceCorrals = res.corrals;
+
+      }
+    );
+  }
+
+  changeCorral()
+  {
+    console.log(this.selectedCorral);
+  }
 }
