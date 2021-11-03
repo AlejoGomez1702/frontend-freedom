@@ -1,20 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Corral } from './interfaces/interfaces';
+import { Animal, Corral } from './interfaces/interfaces';
 import { CorralsService } from './services/corrals.service';
-
-export interface PeriodicElement {
-  position: number;
-  name: string;  
-  age: number;
-  dangerousness: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', age: 1.0079, dangerousness: 'H'},
-  {position: 2, name: 'Helium', age: 4.0026, dangerousness: 'He'},
-  {position: 3, name: 'Lithium', age: 6.941, dangerousness: 'Li'},
-  {position: 4, name: 'Beryllium', age: 9.0122, dangerousness: 'Be'}
-];
 
 @Component({
   selector: 'app-root',
@@ -28,9 +14,10 @@ export class AppComponent implements OnInit
   // dataSource = ELEMENT_DATA;
 
   // Data
-  public selectedCorral: string = '';
-  public dataSourceCorrals: Corral[] = [];
-  public displayedColumnsCorrals: string[] = [ 'name', 'age', 'dangerousness'];
+  public corrals: Corral[] = [];
+  public selectedCorral: number = 0;
+  public dataSourceAnimals: Animal[] = [];
+  public displayedColumnsAnimals: string[] = [ 'name', 'age', 'dangerousness'];
 
   constructor(
     private corralsService: CorralsService
@@ -48,15 +35,24 @@ export class AppComponent implements OnInit
   {
     this.corralsService.getAllCorrals().subscribe(
       res => {
-        // console.log( res );
-        this.dataSourceCorrals = res.corrals;
-
+        this.corrals = res.corrals;
       }
     );
   }
 
+  loadAnimals()
+  {
+    const corral = this.corrals.find(corral => corral.id === this.selectedCorral);
+    if(corral)
+    {
+      this.dataSourceAnimals = corral.animals;
+    }
+    
+  }
+
   changeCorral()
   {
+    this.loadAnimals();
     console.log(this.selectedCorral);
   }
 }
